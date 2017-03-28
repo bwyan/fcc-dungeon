@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
 
+//data
+import playerLevels from './data/playerLevels.js';
+import weapons from './data/weapons.js';
+import maps from './data/maps.js';
+
+//components
+import Board from './components/Board.js';
+
 //styles
 import './App.scss';
 
@@ -7,30 +15,15 @@ class App extends Component {
   
   componentWillMount() {
     this.setState({
-      map: {
-        rows: 100,
-        columns: 100,
-        tiles: [
-          [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}],
-          [{type: 'wall'}, {type: 'floor'}, {type: 'floor'}, {type: 'floor'}, {type: 'floor'}, {type: 'floor'}, {type: 'wall'}],
-          [{type: 'wall'}, {type: 'floor'}, {type: 'enemy', health: 3, reward: {xp: 3, health: 1}}, {type: 'floor'}, {type: 'floor'}, {type: 'floor'}, {type: 'wall'}],
-          [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}]
-        ]
-        //store info about walls, item locations, 
-      },
+      map: maps.l1,
       player: {
-        health: 100,
+        health: playerLevels.l1.maxHealth,
         xp: 0,
         level: 1,
         minAttack: 1,
         maxAttack: 2,
-        weapon: { //should move the weapon stats to a different object
-          type: 'stick',
-          minDamage: 1,
-          maxDamage: 2
-        }
+        weapon: weapons.bat,        
       }
-
     });
   }
 
@@ -38,6 +31,7 @@ class App extends Component {
     return (
       <div className="App">
         <h1>Into the Dungeon…</h1>
+        <Board mapData={this.state.map} />
       </div>
     )
   }
