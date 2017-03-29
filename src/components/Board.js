@@ -6,7 +6,7 @@ class Board extends React.Component {
 		let rows = [];
 
 		for (var i = 0; i < this.props.mapData.rows; i++) {
-			rows.push(<Row className={`row row-${i}`} key={i} rowNumber={i} columns={this.props.columns} rowData={this.props.mapData[i]} toggleIsAliveState={this.props.toggleIsAliveState}/>)
+			rows.push(<Row className={`row row-${i}`} key={i} rowNumber={i} columns={this.props.mapData.columns} rowData={this.props.mapData.tiles[i]} toggleIsAliveState={this.props.toggleIsAliveState}/>)
 		}
 
 		return (
