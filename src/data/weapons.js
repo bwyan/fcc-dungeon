@@ -13,7 +13,7 @@ class Weapon {
 
 const weapons = {
 	'stick': new Weapon('stick', '🌂', 0, 1),
-	'bat' : new Weapon('bat', '🏏', 5, 10),
+	'bat': new Weapon('bat', '🏏', 5, 10),
 	'partyhorn': new Weapon('partyhorn', '🎉', 7, 20)
 }
 

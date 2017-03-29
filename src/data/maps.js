@@ -1,13 +1,17 @@
 const maps = {
 	'l1': {
-    rows: 4,
+    rows: 7,
     columns: 7,
     tiles: [
-      [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}],
-      [{type: 'wall'}, {type: 'floor'}, {type: 'floor'}, {type: 'floor'}, {type: 'floor'}, {type: 'floor'}, {type: 'wall'}],
-      [{type: 'wall'}, {type: 'floor'}, {type: 'enemy', appearance:'🤡', health: 3, reward: {xp: 3, health: 1}}, {type: 'floor'}, {type: 'floor'}, {type: 'floor'}, {type: 'wall'}],
-      [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}]
-    ]
+      [{name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}],
+      [{name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'}],
+      [{name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'}],
+      [{name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'}],
+      [{name: 'wall'}, {name: 'floor'}, {name: 'clown'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'}],
+      [{name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'}],
+      [{name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}]
+    ],
+    startingPosition: [1, 1]
   }
 }
 
