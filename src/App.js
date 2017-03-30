@@ -75,7 +75,7 @@ class App extends Component {
     });
   }
 
-  handleMove(direction) {
+  handleMove(direction) { //TODO: split this into two functions (one for computing the new coordinates, and one for applying the rules to the "next" move);
     const current = this.state.player.position;
     const mapTiles = this.state.mapData.tiles;
     
