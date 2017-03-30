@@ -16,7 +16,9 @@ class App extends Component {
   
   constructor() {
     super();
+    this.handleMove = this.handleMove.bind(this);
     this.setPlayerPosition = this.setPlayerPosition.bind(this);
+    this.getTileIndex = this.getTileIndex.bind(this);
   }
 
   componentWillMount() {
@@ -45,14 +47,25 @@ class App extends Component {
     this.setPlayerPosition(this.state.player.position[0], this.state.player.position[1]);
   }
 
+  getTile(row, col) {
+    return this.state.mapData.tiles[row * this.state.mapData.columns + col]
+  }
+
+  getTileIndex(row, col) {
+    return row * this.state.mapData.columns + col;
+  }
+
   setPlayerPosition(newRow, newCol) {
+    //make a copy of the state that will be mutated.
     const mapData = this.state.mapData;
     const player = this.state.player;
+
     const currentRow = this.state.player.position[0];
     const currentCol = this.state.player.position[1];
 
-    delete mapData.tiles[currentRow][currentCol].player;
-    mapData.tiles[newRow][newCol].player = true; //TODO: should I refactor this so that the player position isn't stored directly on the map? Each tile would get a 'hasPlayer' prop instead (derived from player.position).
+
+    delete mapData.tiles[this.getTileIndex(currentRow, currentCol)].player;
+    mapData.tiles[this.getTileIndex(newRow, newCol)].player = true; //TODO: should I refactor this so that the player position isn't stored directly on the map? Each tile would get a 'hasPlayer' prop instead (derived from player.position).
 
     player.position = [newRow, newCol];
 
@@ -62,34 +75,45 @@ class App extends Component {
     });
   }
 
-  handlePlayerMove(direction) {
+  handleMove(direction) {
     const current = this.state.player.position;
     const mapTiles = this.state.mapData.tiles;
-    let next = current;
+    
+    //this copies the value of current into next, rather than referencing current (helps clean up the switch statement below)
+    let next = current.slice(0);
+
+    console.log(next);
 
     switch(direction) {
       case 'up':
-        next = [(current[0] - 1), (current[1])];
-        console.log(next);
+        // next = [(current[0] - 1), (current[1])]; //see above about current into next. All the cases looked like this.
+        next[0]--;
         break;
       case 'down':
-        next = [(current[0] + 1), (current[1])];
+        next[0]++;
         break;
       case 'left':
-        next = [(current[0]), (current[1] - 1)];
+        next[1]--;
         break;        
       case 'right':
-        next = [(current[0]), (current[1] + 1)];
+        next[1]++;
         break;  
       default:
         break; 
     }
 
-    switch(tiles[mapTiles[next[0]][next[1]].name].kind) { //TODO: refactor that expression. C'mon Bryan!
+    //these help keep the expression in the switch statement readable
+    const nextTileIndex = this.getTileIndex(next[0], next[1]);
+    const nextTileName = mapTiles[nextTileIndex].name;
+
+    switch(tiles[nextTileName].kind) {
       case 'barrier':
         break;
       case 'pathway':
         this.setPlayerPosition(next[0], next[1]);
+        break;
+      case 'enemy':
+        console.log('fight!');
         break;
       default:
         break;

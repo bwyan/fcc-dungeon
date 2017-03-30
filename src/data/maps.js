@@ -1,5 +1,6 @@
 const maps = {
-	// 'l1': {
+//TODO: Delete once we refactor App.js to work with flat mayps.
+// 'l1': {
  //    rows: 7,
  //    columns: 7,
  //    tiles: [

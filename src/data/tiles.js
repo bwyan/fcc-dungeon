@@ -12,7 +12,7 @@ class Enemy {
 		this.kind = 'enemy';
 		this.icon = icon;
 		this.health = health;
-		this.reward = reward;
+		this.reward = reward; //could add a getReward method that returns a semi-random reward.
 	}
 }
 
