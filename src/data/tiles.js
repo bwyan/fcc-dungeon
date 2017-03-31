@@ -19,7 +19,7 @@ class Enemy {
 
 const tiles = {
 		'wall': new Scenery('wall', 'barrier', '🚧'),
-		'floor': new Scenery('floor', 'pathway', '⬜️'),
+		'floor': new Scenery('floor', 'pathway', ' ️'),
 		'clown': new Enemy('clown', 'enemy', '🤡', 3, {xp: 3, health: 1})
 }
 
