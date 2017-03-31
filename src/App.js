@@ -8,6 +8,7 @@ import tiles from './data/tiles.js';
 
 //components
 import Board from './components/Board.js';
+import HUD from './components/HUD.js';
 
 //styles
 import './App.scss';
@@ -41,6 +42,8 @@ class App extends Component {
     });
     //TODO: move the map-related data loading to it's own method that can be used for loading later levels.
     //ie: loadMap(maps.l1);
+
+    document.addEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
   componentDidMount() {
@@ -75,14 +78,58 @@ class App extends Component {
     });
   }
 
-  handleMove(direction) { //TODO: split this into two functions (one for computing the new coordinates, and one for applying the rules to the "next" move);
-    const current = this.state.player.position;
-    const mapTiles = this.state.mapData.tiles;
-    
-    //this copies the value of current into next, rather than referencing current (helps clean up the switch statement below)
-    let next = current.slice(0);
+  handleKeyDown(event) {
+    let direction;
 
-    console.log(next);
+    switch(event.key) {
+      case 'ArrowUp':
+      case 'w':
+        direction = 'up';
+        break;
+      case 'ArrowDown':
+      case 's':
+        direction = 'down';
+        break;
+      case 'ArrowLeft':
+      case 'a':
+        direction = 'left';
+        break;
+      case 'ArrowRight':
+      case 'd':
+        direction = 'right';
+        break;
+      default:
+        break;
+    }
+
+    this.handleMove(direction);
+  }
+
+  handleMove(direction) { //TODO: split this into two functions (one for computing the new coordinates, and one for applying the rules to the "next" move);
+    const mapTiles = this.state.mapData.tiles;    
+    const next = this.nextPlayerCoordinates(direction);
+    
+    //these help keep the expression in the switch statement readable
+    const nextTileIndex = this.getTileIndex(next[0], next[1]);
+    const nextTileName = mapTiles[nextTileIndex].name;
+
+    switch(tiles[nextTileName].kind) {
+      case 'barrier':
+        break;
+      case 'pathway':
+        this.setPlayerPosition(next[0], next[1]);
+        break;
+      case 'enemy':
+        console.log('fight!');
+        break;
+      default:
+        break;
+    }
+  }
+
+  nextPlayerCoordinates(direction) {
+    const current = this.state.player.position;
+    let next = current.slice(0);
 
     switch(direction) {
       case 'up':
@@ -102,28 +149,14 @@ class App extends Component {
         break; 
     }
 
-    //these help keep the expression in the switch statement readable
-    const nextTileIndex = this.getTileIndex(next[0], next[1]);
-    const nextTileName = mapTiles[nextTileIndex].name;
-
-    switch(tiles[nextTileName].kind) {
-      case 'barrier':
-        break;
-      case 'pathway':
-        this.setPlayerPosition(next[0], next[1]);
-        break;
-      case 'enemy':
-        console.log('fight!');
-        break;
-      default:
-        break;
-    }
+    return(next);
   }
 
   render() {
     return (
-      <div className="App">
+      <div className="App" onKeyPress={this.handleKeyPress}>
         <h1>Into the Dungeon…</h1>
+        <HUD player={this.state.player}/>
         <Board mapData={this.state.mapData} />
       </div>
     )
