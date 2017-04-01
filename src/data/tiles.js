@@ -1,3 +1,5 @@
+import weapons from './weapons.js'
+
 class Scenery {
 	constructor(name, kind, icon) {
 		this.name = name;
@@ -7,20 +9,33 @@ class Scenery {
 }
 
 class Enemy {
-	constructor(name, kind, icon, health, reward) {
+	constructor(name, kind, icon, health, rewards) {
 		this.name = name;
 		this.kind = 'enemy';
 		this.icon = icon;
 		this.health = health;
-		this.reward = reward; //could add a getReward method that returns a semi-random reward.
+		this.rewards = rewards; //could add a getReward method that returns a semi-random reward.
 	}
 }
+
+class Item {
+	constructor(name, icon, rewards) {
+		this.name = name;
+		this.kind = 'item';
+		this.icon = icon;
+		this.rewards = rewards; //could add a getReward method here too.
+	}
+}
+
 
 
 const tiles = {
 		'wall': new Scenery('wall', 'barrier', '🚧'),
 		'floor': new Scenery('floor', 'pathway', ' ️'),
-		'clown': new Enemy('clown', 'enemy', '🤡', 3, {xp: 3, health: 1})
+		'clown': new Enemy('clown', 'enemy', '🤡', 3, {xp: 3, health: 1}),
+		'potato': new Item('potato', '🥔', {xp: 0, health: 2}),
+		'package': new Item('package', '📦', {xp: 10, health: 5, weapon: 'partyhorn'}),
+		'bat': weapons.bat
 }
 
 export default tiles;

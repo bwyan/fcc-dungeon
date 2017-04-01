@@ -51,7 +51,7 @@ class App extends Component {
   }
 
   getTile(row, col) {
-    return this.state.mapData.tiles[row * this.state.mapData.columns + col]
+    return this.state.mapData.tileMap[row * this.state.mapData.columns + col]
   }
 
   getTileIndex(row, col) {
@@ -67,8 +67,8 @@ class App extends Component {
     const currentCol = this.state.player.position[1];
 
 
-    delete mapData.tiles[this.getTileIndex(currentRow, currentCol)].player;
-    mapData.tiles[this.getTileIndex(newRow, newCol)].player = true; //TODO: should I refactor this so that the player position isn't stored directly on the map? Each tile would get a 'hasPlayer' prop instead (derived from player.position).
+    delete mapData.tileMap[this.getTileIndex(currentRow, currentCol)].player;
+    mapData.tileMap[this.getTileIndex(newRow, newCol)].player = true; //TODO: should I refactor this so that the player position isn't stored directly on the map? Each tile would get a 'hasPlayer' prop instead (derived from player.position).
 
     player.position = [newRow, newCol];
 
@@ -105,19 +105,57 @@ class App extends Component {
     this.handleMove(direction);
   }
 
+  pickUpItem(item) {
+    let player = this.state.player;
+    const rewards = item.rewards;
+
+    Object.keys(rewards).forEach(reward => {
+      if(reward === 'weapon') {
+        this.changeWeapon(rewards[reward]);
+      } else if(player.hasOwnProperty(reward)) {
+        player[reward] += rewards[reward];
+      } else {
+        player[reward] = rewards[reward];
+      }
+    })
+
+    this.setState({
+      player
+    });
+  }
+  removeItem(row, col) {
+    let mapData = this.state.mapData;
+
+    mapData.tileMap[this.getTileIndex(row, col)].name = 'floor';
+
+    this.setState({mapData});
+  }
+
+  changeWeapon(weapon) {
+    let player = this.state.player;
+
+    player.weapon = weapons[weapon];
+    this.setState({player});
+  }
+
   handleMove(direction) { //TODO: split this into two functions (one for computing the new coordinates, and one for applying the rules to the "next" move);
-    const mapTiles = this.state.mapData.tiles;    
+    const tileMap = this.state.mapData.tileMap;    
     const next = this.nextPlayerCoordinates(direction);
     
     //these help keep the expression in the switch statement readable
     const nextTileIndex = this.getTileIndex(next[0], next[1]);
-    const nextTileName = mapTiles[nextTileIndex].name;
+    const nextTileName = tileMap[nextTileIndex].name;
 
     switch(tiles[nextTileName].kind) {
       case 'barrier':
         break;
       case 'pathway':
         this.setPlayerPosition(next[0], next[1]);
+        break;
+      case 'item':
+        this.pickUpItem(tiles[nextTileName]);
+        this.setPlayerPosition(next[0], next[1]);
+        this.removeItem(next[0], next[1]);
         break;
       case 'enemy':
         console.log('fight!');

@@ -10,7 +10,7 @@ class Board extends React.Component {
 			const start = i * columns;
 			const end = start + columns;
 
-			rows.push(<Row className={`row row-${i}`} key={i} rowNumber={i} columns={columns} rowData={this.props.mapData.tiles.slice(start, end)} toggleIsAliveState={this.props.toggleIsAliveState}/>)
+			rows.push(<Row className={`row row-${i}`} key={i} rowNumber={i} columns={columns} rowData={this.props.mapData.tileMap.slice(start, end)} toggleSelectedState={this.props.toggleIsAliveState}/>)
 		}
 
 		return (
