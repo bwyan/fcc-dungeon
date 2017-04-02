@@ -83,7 +83,6 @@ class App extends Component {
   }
 
   handleKeyDown(event) {
-    console.log(event);
     let direction;
 
     switch(event.keyCode) {
@@ -110,7 +109,7 @@ class App extends Component {
     this.handleMove(direction);
   }
 
-  pickUpItem(item) {
+  pickUpItem(item, row, col) {
     let player = this.state.player;
     const rewards = item.rewards;
 
@@ -124,10 +123,15 @@ class App extends Component {
       }
     })
 
+    if (row && col) {
+      this.removeItem(row, col);
+    }
+
     this.setState({
       player
     });
   }
+
   removeItem(row, col) {
     let mapData = this.state.mapData;
 
@@ -136,8 +140,22 @@ class App extends Component {
     this.setState({mapData});
   }
 
-  changeWeapon(weapon) {
+  setItem(itemName, row, col) {
+    let mapData = this.state.mapData;
+
+    mapData.tileMap[this.getTileIndex(row, col)].name = itemName;
+  }
+
+  changeWeapon(weapon, row, col) {
     let player = this.state.player;
+    let prevWeapon = this.state.player.weapon;
+    const playerPosition = this.state.player.position;
+
+    this.setItem(prevWeapon.name, playerPosition[0], playerPosition[1])
+
+    if(row && col) {
+      this.removeItem(row, col);
+    }
 
     player.weapon = weapons[weapon];
     this.setState({player});
@@ -158,12 +176,15 @@ class App extends Component {
         this.setPlayerPosition(next[0], next[1]);
         break;
       case 'item':
-        this.pickUpItem(tiles[nextTileName]);
+        this.pickUpItem(tiles[nextTileName], next[0], next[1]);
         this.setPlayerPosition(next[0], next[1]);
-        this.removeItem(next[0], next[1]);
         break;
       case 'enemy':
         console.log('fight!');
+        break;
+      case 'weapon':
+        this.changeWeapon(tiles[nextTileName].name, next[0], next[1]);
+        this.setPlayerPosition(next[0], next[1]);
         break;
       default:
         break;
@@ -176,7 +197,6 @@ class App extends Component {
 
     switch(direction) {
       case 'up':
-        // next = [(current[0] - 1), (current[1])]; //see above about current into next. All the cases looked like this.
         next[0]--;
         break;
       case 'down':
