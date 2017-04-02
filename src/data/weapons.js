@@ -1,9 +1,10 @@
 class Weapon {
-	constructor(name, image, minAttack, maxAttack) {
+	constructor(name, icon, minAttack, maxAttack) {
 		this.name = name;
-		this.image = image;
+		this.icon = icon;
 		this.minAttack = minAttack;
 		this.maxAttack = maxAttack;
+		this.kind = 'weapon';
 	}
 
 	get attack() {
@@ -12,7 +13,7 @@ class Weapon {
 }
 
 const weapons = {
-	'stick': new Weapon('stick', '🌂', 0, 1),
+	'umbrella': new Weapon('umbrella', '🌂', 0, 1),
 	'bat': new Weapon('bat', '🏏', 5, 10),
 	'partyhorn': new Weapon('partyhorn', '🎉', 7, 20)
 }

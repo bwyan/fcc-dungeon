@@ -10,7 +10,7 @@ class HUD extends React.Component {
 				<HUDItem label='Level' value={player.level} />
 				<HUDItem label='Experience' value={player.xp} />
 				<HUDItem label='Health' value={player.health} />
-				<HUDItem label='Weapon' value={player.weapon.name} image={player.weapon.image}/>
+				<HUDItem label='Weapon' value={player.weapon.name} image={player.weapon.icon}/>
 			</div>
 		)
 	}
