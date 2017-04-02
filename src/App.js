@@ -10,6 +10,9 @@ import tiles from './data/tiles.js';
 import Board from './components/Board.js';
 import HUD from './components/HUD.js';
 
+//helpers
+//import key from 'keymaster';
+
 //styles
 import './App.scss';
 
@@ -18,6 +21,7 @@ class App extends Component {
   constructor() {
     super();
     this.handleMove = this.handleMove.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.setPlayerPosition = this.setPlayerPosition.bind(this);
     this.getTileIndex = this.getTileIndex.bind(this);
   }
@@ -43,7 +47,7 @@ class App extends Component {
     //TODO: move the map-related data loading to it's own method that can be used for loading later levels.
     //ie: loadMap(maps.l1);
 
-    document.addEventListener('keydown', this.handleKeyDown.bind(this));
+    window.addEventListener('keydown', e => this.handleKeyDown(e));
   }
 
   componentDidMount() {
@@ -79,23 +83,24 @@ class App extends Component {
   }
 
   handleKeyDown(event) {
+    console.log(event);
     let direction;
 
-    switch(event.key) {
-      case 'ArrowUp':
-      case 'w':
+    switch(event.keyCode) {
+      case 38:
+      case 87:
         direction = 'up';
         break;
-      case 'ArrowDown':
-      case 's':
+      case 40:
+      case 83:
         direction = 'down';
         break;
-      case 'ArrowLeft':
-      case 'a':
+      case 37:
+      case 65:
         direction = 'left';
         break;
-      case 'ArrowRight':
-      case 'd':
+      case 39:
+      case 68:
         direction = 'right';
         break;
       default:
@@ -192,7 +197,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App" onKeyPress={this.handleKeyPress}>
+      <div className="App">
         <h1>Into the Dungeon…</h1>
         <HUD player={this.state.player}/>
         <Board mapData={this.state.mapData} />
