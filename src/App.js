@@ -11,7 +11,7 @@ import Board from './components/Board.js';
 import HUD from './components/HUD.js';
 
 //helpers
-//import key from 'keymaster';
+import helpers from './components/helpers.js';
 
 //styles
 import './App.scss';
@@ -24,18 +24,20 @@ class App extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.setPlayerPosition = this.setPlayerPosition.bind(this);
     this.getTileIndex = this.getTileIndex.bind(this);
+    this.changePlayerHealth = helpers.changePlayerHealth.bind(this);
   }
 
   componentWillMount() {
     this.setState({
       mapData: maps.l1,
       player: {
-        health: playerLevels.l1.maxHealth,
+        health: 98,
+        maxHealth: playerLevels[0].maxHealth,
         xp: 0,
-        level: 1,
+        level: 0,
         minAttack: 1,
         maxAttack: 2,
-        weapon: weapons.bat,
+        weapon: weapons.barehands,
         position: maps.l1.startingPosition        
       },
       enemies: { //store stats for any enemy that the player has fought. Remove that enemy when they're defeated.
@@ -114,22 +116,29 @@ class App extends Component {
     const rewards = item.rewards;
 
     Object.keys(rewards).forEach(reward => {
-      if(reward === 'weapon') {
-        this.changeWeapon(rewards[reward]);
-      } else if(player.hasOwnProperty(reward)) {
-        player[reward] += rewards[reward];
-      } else {
-        player[reward] = rewards[reward];
-      }
+      this.getReward(reward, rewards[reward]);
     })
 
-    if (row && col) {
-      this.removeItem(row, col);
-    }
+    this.setState({player});
 
-    this.setState({
-      player
-    });
+    if (row && col) {this.removeItem(row, col);}
+  }
+
+  getReward(reward, value) {
+    console.log(reward, value);
+    switch(reward) {
+      case 'weapon': 
+        this.changeWeapon(value);
+        break;
+      case 'health':
+        this.changePlayerHealth(value);
+        break;
+      case 'xp':
+        this.changePlayerXP(value);
+        break;
+      default:
+        break;
+    }
   }
 
   removeItem(row, col) {
@@ -147,25 +156,53 @@ class App extends Component {
   }
 
   changeWeapon(weapon, row, col) {
+    weapon = weapon.toLowerCase().replace(/\s+/g, '');
+    let prevWeapon = this.state.player.weapon.name.toLowerCase().replace(/\s+/g, '');
     let player = this.state.player;
-    let prevWeapon = this.state.player.weapon;
     const playerPosition = this.state.player.position;
 
-    this.setItem(prevWeapon.name, playerPosition[0], playerPosition[1])
+    //Don't drop "bare hands" onto the map.
+    if(prevWeapon !== 'barehands') {this.setItem(prevWeapon, playerPosition[0], playerPosition[1])};
 
-    if(row && col) {
-      this.removeItem(row, col);
-    }
+    if(row && col) {this.removeItem(row, col);}
 
     player.weapon = weapons[weapon];
     this.setState({player});
   }
 
-  handleMove(direction) { //TODO: split this into two functions (one for computing the new coordinates, and one for applying the rules to the "next" move);
+  changePlayerXP(amount) {
+    let player = this.state.player;
+    const newXP = player.xp += amount;
+    const maxXP = playerLevels[player.level].maxXP;
+
+    if (newXP > maxXP) {
+      player.xp = newXP - maxXP;
+      this.setPlayerLevel(player.level + 1)
+    } else {
+      player.xp = newXP;
+    }
+
+    this.setState({player});
+  }
+
+  setPlayerLevel(level) {
+    let player = this.state.player;
+
+    if (level > playerLevels.length - 1) return;
+
+    player.level = level;
+    player.maxHealth = playerLevels[level].maxHealth;
+    player.health = player.maxHealth;
+    player.minAttack = playerLevels[level].minAttack;
+    player.maxAttack = playerLevels[level].maxAttack;
+
+    this.setState({player});
+  }
+
+  handleMove(direction) {
     const tileMap = this.state.mapData.tileMap;    
     const next = this.nextPlayerCoordinates(direction);
     
-    //these help keep the expression in the switch statement readable
     const nextTileIndex = this.getTileIndex(next[0], next[1]);
     const nextTileName = tileMap[nextTileIndex].name;
 
