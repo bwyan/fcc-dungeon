@@ -13,9 +13,10 @@ class Weapon {
 }
 
 const weapons = {
-	'umbrella': new Weapon('umbrella', '🌂', 0, 1),
-	'bat': new Weapon('bat', '🏏', 5, 10),
-	'partyhorn': new Weapon('partyhorn', '🎉', 7, 20)
+	'barehands': new Weapon('Bare Hands', '🖐', 0, 0),
+	'umbrella': new Weapon('Umbrella', '🌂', 0, 1),
+	'bat': new Weapon('Bat', '🏏', 5, 10),
+	'partyhorn': new Weapon('Partyhorn', '🎉', 7, 20),
 }
 
 export default weapons;
