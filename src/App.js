@@ -153,6 +153,8 @@ class App extends Component {
     let mapData = this.state.mapData;
 
     mapData.tileMap[this.getTileIndex(row, col)].name = itemName;
+
+    this.setState({mapData});
   }
 
   changeWeapon(weapon, row, col) {
@@ -217,7 +219,8 @@ class App extends Component {
         this.setPlayerPosition(next[0], next[1]);
         break;
       case 'enemy':
-        console.log('fight!');
+        // console.log('fight!');
+        this.handleFight(next[0], next[1]);
         break;
       case 'weapon':
         this.changeWeapon(tiles[nextTileName].name, next[0], next[1]);
@@ -226,6 +229,51 @@ class App extends Component {
       default:
         break;
     }
+  }
+
+  handleFight(row, col) {
+    const tileType = tiles[this.state.mapData.tileMap[this.getTileIndex(row, col)].name].constructor.name;
+    
+    if (tileType !== 'Enemy') {
+      console.log('no enemies there');
+      return;
+    }
+
+    if (!this.hasEnemyID(row, col)) {
+      this.setEnemyID(row, col);
+    }
+
+    console.log(`attack enemy`) //attackEnemy(row, col) 
+  }
+
+  setEnemyID(row, col) {
+    const mapData = this.state.mapData;
+    const tile = this.getTile(row, col);
+
+    const enemies = this.state.enemies;
+    const enemy = tiles[tile.name];
+    const enemyID = 'enemy-' + Date.now();
+    
+    console.log(`enemy id assigned: ${enemyID}`);
+
+    enemies[enemyID] = enemy;
+    tile.enemyID = enemyID;
+    mapData.tileMap[this.getTileIndex(row, col)] = tile; 
+
+    this.setState({
+      mapData,
+      enemies
+    })
+  }
+
+  hasEnemyID(row, col) {
+    const tile = this.state.mapData.tileMap[this.getTileIndex(row, col)];
+    
+    if (tile.hasOwnProperty('enemyID')) {
+      return true;
+    } else {
+      return false;
+    }   
   }
 
   nextPlayerCoordinates(direction) {
