@@ -7,7 +7,7 @@ class Weapon {
 		this.kind = 'weapon';
 	}
 
-	get attack() {
+	getAttack() {
 		return Math.floor(Math.random() * (this.maxAttack - this.minAttack + 1) + this.minAttack);
 	}
 }
