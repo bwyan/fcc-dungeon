@@ -23,8 +23,17 @@ class App extends Component {
     this.handleMove = this.handleMove.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.setPlayerPosition = this.setPlayerPosition.bind(this);
-    this.getTileIndex = this.getTileIndex.bind(this);
+    // this.getTileIndex = helpers.getTileIndex.bind(this);
+    // this.getTile = helpers.getTileIndex.bind(this);
     this.changePlayerHealth = helpers.changePlayerHealth.bind(this);
+  }
+
+  getTile(row, col) {
+    return this.state.mapData.tileMap[row * this.state.mapData.columns + col]
+  }
+
+  getTileIndex(row, col) {
+    return row * this.state.mapData.columns + col;
   }
 
   componentWillMount() {
@@ -40,10 +49,8 @@ class App extends Component {
         weapon: weapons.barehands,
         position: maps.l1.startingPosition        
       },
-      enemies: { //store stats for any enemy that the player has fought. Remove that enemy when they're defeated.
-        'enemy-12345': { //create an enemy id based on ms timestamp.
-          health: 10 //what other stats need to be stored here?
-        }
+      enemies: { //store stats for any enemy that the player has fought. (Remove that enemy when they're defeated.)
+
       }
     });
     //TODO: move the map-related data loading to it's own method that can be used for loading later levels.
@@ -56,13 +63,7 @@ class App extends Component {
     this.setPlayerPosition(this.state.player.position[0], this.state.player.position[1]);
   }
 
-  getTile(row, col) {
-    return this.state.mapData.tileMap[row * this.state.mapData.columns + col]
-  }
 
-  getTileIndex(row, col) {
-    return row * this.state.mapData.columns + col;
-  }
 
   setPlayerPosition(newRow, newCol) {
     //make a copy of the state that will be mutated.
@@ -243,13 +244,74 @@ class App extends Component {
       this.setEnemyID(row, col);
     }
 
-    console.log(`attack enemy`) //attackEnemy(row, col) 
+    var enemyID = this.state.mapData.tileMap[this.getTileIndex(row, col)].enemyID;
+    this.attackPlayer(enemyID);
+    this.attackEnemy(enemyID);
+  }
+
+  attackPlayer(enemyID){
+    console.log(`Player was attacked by ${enemyID}`);
+  }
+
+  attackEnemy(enemyID) {
+    // console.log(`Player attacked ${enemyID}`);
+    const enemies = this.state.enemies;
+    const attackValue = this.calcPlayerAttack();
+
+    enemies[enemyID].health -= attackValue;
+
+    if (enemies[enemyID].health <= 0) {
+      this.killEnemy(enemyID)
+    } else {
+      this.setState({
+        enemies
+      });
+    }
+  }
+
+  calcPlayerAttack() {
+    const weapon = this.state.player.weapon.name.toLowerCase().replace(/\s+/g, '');
+    const weaponAttack = weapons[weapon].getAttack();
+
+    const min = this.state.player.minAttack;
+    const max = this.state.player.minAttack;
+
+    const playerAttack = Math.floor(Math.random() * (max - min + 1) + min);
+
+    return weaponAttack + playerAttack;
+  }
+
+  killEnemy(enemyID) {
+    console.log(`${enemyID} was killed`);
+
+    const enemies = this.state.enemies;
+    const mapData = this.state.mapData;
+    const enemyPosition = this.getEnemyPosition(enemyID);
+
+    this.pickUpItem(enemies[enemyID]);
+
+    delete enemies[enemyID];
+    mapData.tileMap[enemyPosition] = {name: `floor`};
+
+    this.setState({enemies, mapData});
+  }
+
+  getEnemyPosition(enemyID) {
+    const tileMap = this.state.mapData.tileMap;
+    const testID = enemyID;
+    
+    for (var i = 0; i < tileMap.length; i++) {
+      if (tileMap[i].hasOwnProperty(`enemyID`) && tileMap[i].enemyID === testID) {
+        return(i);
+      }
+    }
+
+    return -1; //this ensures we don't cause other functions to throw an error if the enemy doesn't exist. Instead, they'll update the array index -1, which is harmless.
   }
 
   setEnemyID(row, col) {
     const mapData = this.state.mapData;
     const tile = this.getTile(row, col);
-
     const enemies = this.state.enemies;
     const enemy = tiles[tile.name];
     const enemyID = 'enemy-' + Date.now();
