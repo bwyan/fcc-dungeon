@@ -10,7 +10,7 @@ const helpers = {
       }
 
       this.setState({player});
-    }
+  }
 }
 
 export default helpers;
