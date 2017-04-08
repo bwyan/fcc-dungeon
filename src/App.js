@@ -233,10 +233,10 @@ class App extends Component {
   }
 
   handleFight(row, col) {
-    const tileType = tiles[this.state.mapData.tileMap[this.getTileIndex(row, col)].name].constructor.name;
+    const tileType = tiles[this.state.mapData.tileMap[this.getTileIndex(row, col)].name].kind;
     
-    if (tileType !== 'Enemy') {
-      console.log('no enemies there');
+    if (tileType !== 'enemy') {
+      console.log('no enemies there'); //the culprit is probably (constructor.name) on line 236, due to the build engine creating an optimized name for the enemy class.
       return;
     }
 
