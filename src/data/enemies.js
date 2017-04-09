@@ -6,8 +6,13 @@ class Enemy {
 		this.health = health;
 		this.minAttack = minAttack;
 		this.maxAttack = maxAttack;
-		this.rewards = rewards; //could add a getReward method that returns a semi-random reward.
+		this.rewards = rewards; 
+	}		
+
+	getAttack() {
+		return Math.floor(Math.random() * (this.maxAttack - this.minAttack + 1) + this.minAttack);
 	}
+
 }
 
 const enemies = {
