@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 //data
 import playerLevels from './data/playerLevels.js';
 import weapons from './data/weapons.js';
+import enemyList from './data/enemies.js';
 import maps from './data/maps.js';
 import tiles from './data/tiles.js';
 
@@ -40,7 +41,7 @@ class App extends Component {
     this.setState({
       mapData: maps.l1,
       player: {
-        health: 98,
+        health: 30,
         maxHealth: playerLevels[0].maxHealth,
         xp: 0,
         level: 0,
@@ -63,12 +64,14 @@ class App extends Component {
     this.setPlayerPosition(this.state.player.position[0], this.state.player.position[1]);
   }
 
-
+  gameOver() {
+    console.log('Game Over');
+  }
 
   setPlayerPosition(newRow, newCol) {
     //make a copy of the state that will be mutated.
-    const mapData = this.state.mapData;
-    const player = this.state.player;
+    const mapData = {...this.state.mapData};
+    const player = {...this.state.player};
 
     const currentRow = this.state.player.position[0];
     const currentCol = this.state.player.position[1];
@@ -113,14 +116,11 @@ class App extends Component {
   }
 
   pickUpItem(item, row, col) {
-    let player = this.state.player;
     const rewards = item.rewards;
 
     Object.keys(rewards).forEach(reward => {
       this.getReward(reward, rewards[reward]);
     })
-
-    this.setState({player});
 
     if (row && col) {this.removeItem(row, col);}
   }
@@ -174,30 +174,37 @@ class App extends Component {
   }
 
   changePlayerXP(amount) {
-    let player = this.state.player;
+    console.log('changing xp by ' + amount);
+    let player = {...this.state.player};
     const newXP = player.xp += amount;
     const maxXP = playerLevels[player.level].maxXP;
 
     if (newXP > maxXP) {
       player.xp = newXP - maxXP;
-      this.setPlayerLevel(player.level + 1)
+      this.setState({player});
+      this.setPlayerLevel(player.level + 1);
     } else {
       player.xp = newXP;
+      this.setState({player});
     }
-
-    this.setState({player});
   }
 
+
+
   setPlayerLevel(level) {
+    console.log('setting player level to ' + level);
     let player = this.state.player;
 
-    if (level > playerLevels.length - 1) return;
-
+    if (level > playerLevels.length - 1) {
+      console.log('level exceeds limit');
+      return;
+    }
     player.level = level;
     player.maxHealth = playerLevels[level].maxHealth;
     player.health = player.maxHealth;
     player.minAttack = playerLevels[level].minAttack;
     player.maxAttack = playerLevels[level].maxAttack;
+    console.log(player);
 
     this.setState({player});
   }
@@ -250,15 +257,30 @@ class App extends Component {
   }
 
   attackPlayer(enemyID){
-    console.log(`Player was attacked by ${enemyID}`);
+    let player = {...this.state.player};
+    const enemy = enemyList[this.state.enemies[enemyID].name.toLowerCase().replace(/\s+/g, '')];
+    const damage = enemy.getAttack();
+
+    player.health -= damage;
+    console.log(`state: ` + this.state.player.health);
+    console.log(`local var: ` + player.health);
+
+    if (player.health < 1) {
+      player.health = 0;
+      this.setState({player});
+      this.gameOver();
+    } else {
+      console.log('else called')
+      this.setState({player});
+    }
   }
 
   attackEnemy(enemyID) {
     // console.log(`Player attacked ${enemyID}`);
-    const enemies = this.state.enemies;
-    const attackValue = this.calcPlayerAttack();
+    const enemies = {...this.state.enemies};
+    const damage = this.calcPlayerAttack();
 
-    enemies[enemyID].health -= attackValue;
+    enemies[enemyID].health -= damage;
 
     if (enemies[enemyID].health <= 0) {
       this.killEnemy(enemyID)
@@ -284,19 +306,19 @@ class App extends Component {
   killEnemy(enemyID) {
     console.log(`${enemyID} was killed`);
 
-    const enemies = this.state.enemies;
-    const mapData = this.state.mapData;
-    const enemyPosition = this.getEnemyPosition(enemyID);
+    const enemies = {...this.state.enemies};
+    const mapData = {...this.state.mapData};
+    const enemyIndex = this.getenemyIndex(enemyID);
 
     this.pickUpItem(enemies[enemyID]);
 
     delete enemies[enemyID];
-    mapData.tileMap[enemyPosition] = {name: `floor`};
+    mapData.tileMap[enemyIndex] = {name: `floor`};
 
     this.setState({enemies, mapData});
   }
 
-  getEnemyPosition(enemyID) {
+  getenemyIndex(enemyID) {
     const tileMap = this.state.mapData.tileMap;
     const testID = enemyID;
     
@@ -310,9 +332,9 @@ class App extends Component {
   }
 
   setEnemyID(row, col) {
-    const mapData = this.state.mapData;
+    const mapData = {...this.state.mapData};
     const tile = this.getTile(row, col);
-    const enemies = this.state.enemies;
+    const enemies = {...this.state.enemies};
     const enemy = tiles[tile.name];
     const enemyID = 'enemy-' + Date.now();
     
