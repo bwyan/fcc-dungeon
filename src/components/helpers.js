@@ -1,6 +1,6 @@
 const helpers = {
   changePlayerHealth(amount) {
-      let player = this.state.player;
+      const player = {...this.state.player};
       const newHealth = player.health += amount;
 
       if (newHealth > player.maxHealth) {
@@ -8,8 +8,8 @@ const helpers = {
       } else {
         player.health = newHealth;
       }
-
-      this.setState({player});
+      
+      this.setState({ player });
   }
 }
 
