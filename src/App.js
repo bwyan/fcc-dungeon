@@ -38,24 +38,17 @@ class App extends Component {
   }
 
   componentWillMount() {
-    let mapIsDark = false;
+    let mapIsDark = true;
     let mapData = maps.l1;
-    let coverData = JSON.parse(JSON.stringify(mapData));
     
     if (mapIsDark) {
-      coverData.tileMap = mapData.tileMap.map(tile => {
+      mapData.tileMap.map(tile => {
         return tile = {name: 'dark'}
       });      
     }
 
-
-    let position = maps.l1.startingPosition;
-
-    console.log(coverData);
-
     this.setState({
       mapIsDark,
-      coverData,
       mapData,
       player: {
         health: 30,
@@ -77,7 +70,6 @@ class App extends Component {
 
   componentDidMount() {
     this.setPlayerPosition(this.state.player.position[0], this.state.player.position[1]);
-
   }
 
   gameOver() {
