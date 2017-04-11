@@ -38,8 +38,26 @@ class App extends Component {
   }
 
   componentWillMount() {
+    let mapData = maps.l1;
+    let coverData = JSON.parse(JSON.stringify(mapData));
+    
+    coverData.tileMap = mapData.tileMap.map(tile => {
+      return tile = {name: 'dark'}
+    });
+
+    mapData.tileMap.forEach(tile => {
+      //console.log(tile);
+      // console.log(mapData.tileMap[tile]);
+      tile.dark = true;
+    });
+
+    let position = maps.l1.startingPosition;
+
+    console.log(coverData);
+
     this.setState({
-      mapData: maps.l1,
+      coverData,
+      mapData,
       player: {
         health: 30,
         maxHealth: playerLevels[0].maxHealth,
@@ -80,12 +98,39 @@ class App extends Component {
     delete mapData.tileMap[this.getTileIndex(currentRow, currentCol)].player;
     mapData.tileMap[this.getTileIndex(newRow, newCol)].player = true; //TODO: should I refactor this so that the player position isn't stored directly on the map? Each tile would get a 'hasPlayer' prop instead (derived from player.position).
 
+    this.setLitTiles(this.getTileIndex(newRow, newCol));
+
     player.position = [newRow, newCol];
 
     this.setState({
       mapData,
       player
     });
+  }
+
+  setLitTiles(index) {
+    let mapData = {...this.state.mapData};
+    let tileMap = mapData.tileMap
+
+    tileMap.forEach(tile => {
+      tile.dark = true;
+    });
+
+
+    tileMap[index].dark = false;
+    tileMap[index - 1].dark = false;
+    // tileMap[index - 2].dark = false; need to wrap in an if statement to avoid wraparound
+    tileMap[index + 1].dark = false; //to the left
+    // tileMap[index + 2].dark = false; //to the right need to wrap in an if statement to avoid wraparound
+    tileMap[index + mapData.columns].dark = false; //below
+    tileMap[index + mapData.columns - 1].dark = false;
+    tileMap[index + mapData.columns + 1].dark = false;
+    tileMap[index - mapData.columns].dark = false; //above
+    tileMap[index - mapData.columns - 1].dark = false;
+    tileMap[index - mapData.columns + 1].dark = false;
+    
+    this.setState({mapData});
+
   }
 
   handleKeyDown(event) {
@@ -322,6 +367,8 @@ class App extends Component {
     const tileMap = this.state.mapData.tileMap;
     const testID = enemyID;
     
+    
+    
     for (var i = 0; i < tileMap.length; i++) {
       if (tileMap[i].hasOwnProperty(`enemyID`) && tileMap[i].enemyID === testID) {
         return(i);
@@ -389,7 +436,7 @@ class App extends Component {
       <div className="App">
         <h1>Into the Dungeon…</h1>
         <HUD player={this.state.player}/>
-        <Board mapData={this.state.mapData} />
+        <Board mapData={this.state.mapData} coverMapData={this.state.coverData}/>
       </div>
     )
   }
