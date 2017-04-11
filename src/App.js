@@ -38,24 +38,23 @@ class App extends Component {
   }
 
   componentWillMount() {
+    let mapIsDark = false;
     let mapData = maps.l1;
     let coverData = JSON.parse(JSON.stringify(mapData));
     
-    coverData.tileMap = mapData.tileMap.map(tile => {
-      return tile = {name: 'dark'}
-    });
+    if (mapIsDark) {
+      coverData.tileMap = mapData.tileMap.map(tile => {
+        return tile = {name: 'dark'}
+      });      
+    }
 
-    mapData.tileMap.forEach(tile => {
-      //console.log(tile);
-      // console.log(mapData.tileMap[tile]);
-      tile.dark = true;
-    });
 
     let position = maps.l1.startingPosition;
 
     console.log(coverData);
 
     this.setState({
+      mapIsDark,
       coverData,
       mapData,
       player: {
@@ -67,10 +66,8 @@ class App extends Component {
         maxAttack: 2,
         weapon: weapons.barehands,
         position: maps.l1.startingPosition        
-      },
-      enemies: { //store stats for any enemy that the player has fought. (Remove that enemy when they're defeated.)
-
       }
+      
     });
     //TODO: move the map-related data loading to it's own method that can be used for loading later levels.
     //ie: loadMap(maps.l1);
@@ -80,6 +77,7 @@ class App extends Component {
 
   componentDidMount() {
     this.setPlayerPosition(this.state.player.position[0], this.state.player.position[1]);
+
   }
 
   gameOver() {
@@ -109,27 +107,29 @@ class App extends Component {
   }
 
   setLitTiles(index) {
-    let mapData = {...this.state.mapData};
-    let tileMap = mapData.tileMap
+    if (this.state.mapIsDark) {
+      let mapData = {...this.state.mapData};
+      let tileMap = mapData.tileMap
 
-    tileMap.forEach(tile => {
-      tile.dark = true;
-    });
+      tileMap.forEach(tile => {
+        tile.dark = true;
+      });
 
 
-    tileMap[index].dark = false;
-    tileMap[index - 1].dark = false;
-    // tileMap[index - 2].dark = false; need to wrap in an if statement to avoid wraparound
-    tileMap[index + 1].dark = false; //to the left
-    // tileMap[index + 2].dark = false; //to the right need to wrap in an if statement to avoid wraparound
-    tileMap[index + mapData.columns].dark = false; //below
-    tileMap[index + mapData.columns - 1].dark = false;
-    tileMap[index + mapData.columns + 1].dark = false;
-    tileMap[index - mapData.columns].dark = false; //above
-    tileMap[index - mapData.columns - 1].dark = false;
-    tileMap[index - mapData.columns + 1].dark = false;
-    
-    this.setState({mapData});
+      tileMap[index].dark = false;
+      tileMap[index - 1].dark = false;
+      // tileMap[index - 2].dark = false; need to wrap in an if statement to avoid wraparound
+      tileMap[index + 1].dark = false; //to the left
+      // tileMap[index + 2].dark = false; //to the right need to wrap in an if statement to avoid wraparound
+      tileMap[index + mapData.columns].dark = false; //below
+      tileMap[index + mapData.columns - 1].dark = false;
+      tileMap[index + mapData.columns + 1].dark = false;
+      tileMap[index - mapData.columns].dark = false; //above
+      tileMap[index - mapData.columns - 1].dark = false;
+      tileMap[index - mapData.columns + 1].dark = false;
+
+      this.setState({mapData});     
+    }
 
   }
 
