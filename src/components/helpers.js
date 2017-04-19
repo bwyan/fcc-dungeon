@@ -21,7 +21,6 @@ const helpers = {
   },
 
   setPlayerPosition(newRow, newCol) {
-    //make a copy of the state that will be mutated.
     const mapData = {...this.state.mapData};
     const player = {...this.state.player};
 
@@ -36,13 +35,11 @@ const helpers = {
 
     player.position = [newRow, newCol];
 
-    this.setState({
-      mapData,
-      player
-    });
+    this.setState({mapData, player});
   },
 
   setLitTiles(index) {
+    console.log(`setting lit tiles`);
     if (this.state.mapIsDark) {
       let mapData = {...this.state.mapData};
       let tileMap = mapData.tileMap
@@ -65,7 +62,41 @@ const helpers = {
 
       this.setState({mapData});     
     }
-  }
-}
+  },
 
+  toggleDarkMode() {
+    let mapIsDark = this.state.mapIsDark;
+    let mapData = {...this.state.mapData}; 
+
+    if (mapIsDark) {
+      mapData.tileMap.forEach(tile => {
+        tile.dark = false;
+      });      
+    } else { //TODO: all of this code repeats code in helpers.js. Refactor so that we can call a common function for both cases.
+      let tileMap = mapData.tileMap;
+      let index = this.getTileIndex(this.state.player.position[0], this.state.player.position[1]);
+
+      tileMap.forEach(tile => {
+        tile.dark = true;
+      });
+
+      tileMap[index].dark = false;
+      tileMap[index - 1].dark = false;
+      // tileMap[index - 2].dark = false; need to wrap in an if statement to avoid wraparound
+      tileMap[index + 1].dark = false; //to the left
+      // tileMap[index + 2].dark = false; //to the right need to wrap in an if statement to avoid wraparound
+      tileMap[index + mapData.columns].dark = false; //below
+      tileMap[index + mapData.columns - 1].dark = false;
+      tileMap[index + mapData.columns + 1].dark = false;
+      tileMap[index - mapData.columns].dark = false; //above
+      tileMap[index - mapData.columns - 1].dark = false;
+      tileMap[index - mapData.columns + 1].dark = false;
+    }
+    mapIsDark = !mapIsDark;
+    this.setState({mapIsDark, mapData}); 
+    // this.setLitTiles(this.getTileIndex(this.state.player.position[0], this.state.player.position[1]));
+  }
+
+
+}
 export default helpers;

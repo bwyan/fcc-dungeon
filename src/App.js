@@ -31,6 +31,7 @@ class App extends Component {
     this.setPlayerPosition = helpers.setPlayerPosition.bind(this);
     this.changePlayerHealth = helpers.changePlayerHealth.bind(this);
     this.setLitTiles = helpers.setLitTiles.bind(this);
+    this.toggleDarkMode = helpers.toggleDarkMode.bind(this);
 
     this.handleFight = combat.handleFight.bind(this);
     this.attackPlayer = combat.attackPlayer.bind(this);
@@ -55,12 +56,6 @@ class App extends Component {
     let mapIsDark = true;
     let mapData = maps.l1;
     
-    if (mapIsDark) {
-      mapData.tileMap.map(tile => {
-        return tile = {name: 'dark'}
-      });      
-    }
-
     this.setState({
       mapIsDark,
       mapData,
@@ -73,8 +68,7 @@ class App extends Component {
         maxAttack: 2,
         weapon: weapons.barehands,
         position: maps.l1.startingPosition        
-      }
-      
+      }      
     });
     //TODO: move the map-related data loading to it's own method that can be used for loading later levels.
     //ie: loadMap(maps.l1);
@@ -90,6 +84,9 @@ class App extends Component {
   gameOver() {
     console.log('Game Over');
   }
+
+
+
 
   handleKeyDown(event) {
     let direction;
@@ -172,12 +169,16 @@ class App extends Component {
     return(next);
   }
 
+
+
+
   render() {
     return (
       <div className="App">
         <h1>Into the Dungeon…</h1>
+        <Board mapData={this.state.mapData} coverMapData={this.state.coverData}/>      
         <HUD player={this.state.player}/>
-        <Board mapData={this.state.mapData} coverMapData={this.state.coverData}/>
+        <button onClick={this.toggleDarkMode}>{this.state.mapIsDark ? 'Lights On' : `Lights Off`}</button>
       </div>
     )
   }

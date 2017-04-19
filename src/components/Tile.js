@@ -13,7 +13,7 @@ class Tile extends React.Component {
 	render() {
 		const name = this.props.tileData.name;
 		const player = this.props.tileData.player === true ? true : false;
-		const dark = this.props.tileData.dark; //just for testing
+		const dark = this.props.tileData.dark;
 
 		return(
 			<div className={dark ? 'tile dark' : 'tile ' + name} data-row={this.props.rowNumber} data-col={this.props.colNumber} onClick={(e) => this.handleClick(e)}>
