@@ -54,7 +54,7 @@ class App extends Component {
 
   componentWillMount() {
     let mapIsDark = true;
-    let mapData = maps.l1;
+    let mapData = maps.m2;
     
     this.setState({
       mapIsDark,
@@ -67,7 +67,7 @@ class App extends Component {
         minAttack: 1,
         maxAttack: 2,
         weapon: weapons.barehands,
-        position: maps.l1.startingPosition        
+        position: mapData.startingPosition        
       }      
     });
     //TODO: move the map-related data loading to it's own method that can be used for loading later levels.
@@ -168,9 +168,6 @@ class App extends Component {
 
     return(next);
   }
-
-
-
 
   render() {
     return (
