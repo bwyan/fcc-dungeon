@@ -5,7 +5,6 @@ const player = {
   changePlayerXP(amount) {
 
     let player = {...this.state.player};
-    console.log(player);
     const newXP = player.xp += amount;
     const maxXP = playerLevels[player.level].maxXP;
 
