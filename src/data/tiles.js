@@ -23,8 +23,7 @@ const tiles = {
 		'floor': new Scenery('floor', 'pathway', ''),
 		'door': new Scenery('door', 'pathway', '🚪'),
 		'potato': new Item('potato', '🥔', {xp: 0, health: 2}),
-		'package': new Item('package', '📦', {xp: 10, health: 5, weapon: 'umbrella'}),
-		'dark': new Scenery('dark', 'cover', '🕶')
+		'package': new Item('package', '📦', {xp: 10, health: 5, weapon: 'umbrella'})
 }
 
 Object.keys(weapons).forEach(weapon => {
