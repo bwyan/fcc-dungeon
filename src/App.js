@@ -32,6 +32,8 @@ class App extends Component {
     this.changePlayerHealth = helpers.changePlayerHealth.bind(this);
     this.setLitTiles = helpers.setLitTiles.bind(this);
     this.toggleDarkMode = helpers.toggleDarkMode.bind(this);
+    // this.loadMap = helpers.loadMap.bind(this);
+    // this.warp = helpers.loadMap.bind(this);
 
     this.handleFight = combat.handleFight.bind(this);
     this.attackPlayer = combat.attackPlayer.bind(this);
@@ -53,7 +55,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    let mapIsDark = true;
+    let mapIsDark = false;
     let mapData = maps.m2;
     
     this.setState({
@@ -84,9 +86,6 @@ class App extends Component {
   gameOver() {
     console.log('Game Over');
   }
-
-
-
 
   handleKeyDown(event) {
     let direction;
@@ -144,6 +143,20 @@ class App extends Component {
     }
   }
 
+  warp(mapNumber) {
+    this.loadMap(mapNumber);
+    this.setPlayerPosition(this.state.mapData.startingPosition[0], this.state.mapData.startingPosition[1]);
+  }
+
+  loadMap(mapNumber) {
+    let mapData = maps[mapNumber];
+    let enemies = {};
+
+    this.setState({
+      mapData,
+      enemies
+    });
+  }
 
   nextPlayerCoordinates(direction) {
     const current = this.state.player.position;
