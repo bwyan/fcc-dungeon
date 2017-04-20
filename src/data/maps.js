@@ -8,7 +8,7 @@ const maps = {
       {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
       {name: 'wall'}, {name: 'partyhorn'}, {name: 'goblin'}, {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
       {name: 'wall'}, {name: 'floor'}, {name: 'clown'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
-      {name: 'wall'}, {name: 'package'}, {name: 'floor'}, {name: 'bat'}, {name: 'floor'}, {name: 'door'}, {name: 'wall'},
+      {name: 'wall'}, {name: 'package'}, {name: 'floor'}, {name: 'bat'}, {name: 'floor'}, {name: 'door', warp: 'm2'}, {name: 'wall'},
       {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}
     ],
     startingPosition: [1, 1]
@@ -21,7 +21,7 @@ const maps = {
       {name: 'wall'}, {name: 'wall'}, {name: 'floor'}, {name: 'wall'}, {name: 'potato'}, {name: 'wall'}, {name: 'floor'}, {name: 'goblin'}, {name: 'floor'}, {name: 'wall'},
       {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
       {name: 'wall'}, {name: 'partyhorn'}, {name: 'goblin'}, {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
-      {name: 'wall'}, {name: 'door'}, {name: 'clown'}, {name: 'clown'}, {name: 'floor'}, {name: 'clown'}, {name: 'floor'}, {name: 'floor'}, {name: 'potato'}, {name: 'wall'},
+      {name: 'wall'}, {name: 'door', warp: 'm1'}, {name: 'clown'}, {name: 'clown'}, {name: 'floor'}, {name: 'clown'}, {name: 'floor'}, {name: 'floor'}, {name: 'potato'}, {name: 'wall'},
       {name: 'wall'}, {name: 'package'}, {name: 'floor'}, {name: 'bat'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
       {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'}, {name: 'potato'}, {name: 'floor'}, {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
       {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'floor'}, {name: 'wall'}, {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
