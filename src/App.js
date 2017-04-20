@@ -56,7 +56,7 @@ class App extends Component {
 
   componentWillMount() {
     let mapIsDark = false;
-    let mapData = maps.m2;
+    let mapData = {...maps.m2};
     
     this.setState({
       mapIsDark,
@@ -138,18 +138,30 @@ class App extends Component {
         this.changeWeapon(tiles[nextTileName].name, next[0], next[1]);
         this.setPlayerPosition(next[0], next[1]);
         break;
+      case 'warp':
+        this.warp(tileMap[nextTileIndex].warp);
+        break;
       default:
         break;
     }
   }
 
   warp(mapNumber) {
+    this.removePlayer();
     this.loadMap(mapNumber);
     this.setPlayerPosition(this.state.mapData.startingPosition[0], this.state.mapData.startingPosition[1]);
   }
 
+  removePlayer() { //this would also be useful in helpers.js. Try to combine once I have a better strategy for modules.
+    let mapData = {...this.state.mapData};
+    delete mapData.tileMap[this.getTileIndex(this.state.player.position[0], this.state.player.position[1])].player;
+
+    this.setState({mapData});
+  }
+
   loadMap(mapNumber) {
-    let mapData = maps[mapNumber];
+    let mapData = {...maps[mapNumber]};
+    console.log(mapData);
     let enemies = {};
 
     this.setState({
