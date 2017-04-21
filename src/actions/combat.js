@@ -17,7 +17,7 @@ const combat = {
     const mapData = {...this.state.mapData};
     const tile = this.getTile(row, col);
     const enemies = {...this.state.enemies};
-    const enemy = tiles[tile.name];
+    const enemy = JSON.parse(JSON.stringify(tiles[tile.name])); //TODO: Fix so that it makes a copy of this enemy.
     const enemyID = 'enemy-' + Date.now();
     
     enemies[enemyID] = enemy;
