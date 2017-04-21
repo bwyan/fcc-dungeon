@@ -60,7 +60,6 @@ class App extends Component {
 
 
   componentWillMount() {
-
     this.initialize();
 
     window.addEventListener('keydown', e => this.handleKeyDown(e));
@@ -72,9 +71,9 @@ class App extends Component {
   }
 
   initialize() {
-    let mapIsDark = false;
+    let mapIsDark = true;
     const mapData = JSON.parse(JSON.stringify(maps.m1));
-    // const enemies = {};
+    const enemies = {};
     const player = {
         health: 30,
         maxHealth: playerLevels[0].maxHealth,
@@ -89,14 +88,17 @@ class App extends Component {
     this.setState({
       mapIsDark,
       mapData,
-      // enemies,
+      enemies,
       player
+    }, function() {
+      this.setPlayerPosition(this.state.player.position[0], this.state.player.position[1]);
     });
   }
 
   gameOver() {
     console.log('Game Over');
     this.initialize();
+
   }
 
   handleKeyDown(event) {
