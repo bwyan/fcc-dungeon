@@ -56,7 +56,7 @@ class App extends Component {
 
   componentWillMount() {
     let mapIsDark = false;
-    let mapData = {...maps.m2};
+    const mapData = JSON.parse(JSON.stringify(maps.m1));
     
     this.setState({
       mapIsDark,
@@ -160,13 +160,11 @@ class App extends Component {
   }
 
   loadMap(mapNumber) {
-    let mapData = {...maps[mapNumber]};
+    let mapData = JSON.parse(JSON.stringify(maps[mapNumber]));
     console.log(mapData);
-    let enemies = {};
 
     this.setState({
-      mapData,
-      enemies
+      mapData
     });
   }
 
