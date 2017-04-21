@@ -52,28 +52,16 @@ class App extends Component {
 
     this.changePlayerXP = player.changePlayerXP.bind(this);
     this.setPlayerLevel = player.setPlayerLevel.bind(this);
+
   }
 
+
+
+
+
   componentWillMount() {
-    let mapIsDark = false;
-    const mapData = JSON.parse(JSON.stringify(maps.m1));
-    
-    this.setState({
-      mapIsDark,
-      mapData,
-      player: {
-        health: 30,
-        maxHealth: playerLevels[0].maxHealth,
-        xp: 0,
-        level: 0,
-        minAttack: 1,
-        maxAttack: 2,
-        weapon: weapons.barehands,
-        position: mapData.startingPosition        
-      }      
-    });
-    //TODO: move the map-related data loading to it's own method that can be used for loading later levels.
-    //ie: loadMap(maps.l1);
+
+    this.initialize();
 
     window.addEventListener('keydown', e => this.handleKeyDown(e));
   }
@@ -83,8 +71,32 @@ class App extends Component {
 
   }
 
+  initialize() {
+    let mapIsDark = false;
+    const mapData = JSON.parse(JSON.stringify(maps.m1));
+    // const enemies = {};
+    const player = {
+        health: 30,
+        maxHealth: playerLevels[0].maxHealth,
+        xp: 0,
+        level: 0,
+        minAttack: 1,
+        maxAttack: 2,
+        weapon: weapons.barehands,
+        position: mapData.startingPosition        
+    }
+    
+    this.setState({
+      mapIsDark,
+      mapData,
+      // enemies,
+      player
+    });
+  }
+
   gameOver() {
     console.log('Game Over');
+    this.initialize();
   }
 
   handleKeyDown(event) {
