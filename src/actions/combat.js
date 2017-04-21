@@ -66,6 +66,8 @@ const combat = {
     const enemies = {...this.state.enemies};
     const damage = this.calcPlayerAttack();
 
+    if(enemies[enemyID] === undefined) {return;};
+
     enemies[enemyID].health -= damage;
 
     if (enemies[enemyID].health <= 0) {
