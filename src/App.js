@@ -9,6 +9,7 @@ import tiles from './data/tiles.js';
 //components
 import Board from './components/Board.js';
 import HUD from './components/HUD.js';
+import Editor from './components/Editor.js';
 
 //helpers
 import helpers from './components/helpers.js';
@@ -25,6 +26,8 @@ class App extends Component {
   
   constructor() {
     super();
+
+    this.setGridDimensions = this.setGridDimensions.bind(this);
 
     this.getTileIndex = helpers.getTileIndex.bind(this);
     this.getTile = helpers.getTile.bind(this);
@@ -54,9 +57,6 @@ class App extends Component {
     this.setPlayerLevel = player.setPlayerLevel.bind(this);
 
   }
-
-
-
 
 
   componentWillMount() {
@@ -206,6 +206,49 @@ class App extends Component {
     return(next);
   }
 
+  setGridDimensions(rows, columns) {
+    console.log('New Dimensions. Rows: ' + rows + ' Columns: ' + columns);
+
+    columns = columns || this.state.columns;
+    let mapData = {...this.state.mapData};
+    let tileMap = mapData.tileMap;
+
+    if (tileMap.length < (rows * columns)) {
+      for (var i = tileMap.length; i < rows * columns; i++) {
+        console.log('adding a new tile: ' + i);
+        tileMap.push({name: 'floor'})
+
+      }
+    } else if (tileMap.length > rows * columns) {
+      tileMap.splice(rows * columns - tileMap.length);
+    }
+
+    tileMap.forEach((tile, index, tileMap) => {
+      if(index % columns === 0 || index % columns === columns - 1) {
+        tileMap[index] = {name: 'wall'};  
+      }     
+
+      if(index < columns - 1) {
+        tileMap[index] = {name: 'wall'}; 
+      }
+
+      if(index > tileMap.length - columns) {
+        tileMap[index] = {name: 'wall'}; 
+      }
+    });
+
+
+    mapData.rows = rows;
+    mapData.columns = columns;
+
+    this.setState({
+      rows,
+      columns,
+      mapData
+    })
+  }
+
+
   render() {
     return (
       <div className="App">
@@ -213,6 +256,7 @@ class App extends Component {
         <Board mapData={this.state.mapData} coverMapData={this.state.coverData}/>      
         <HUD player={this.state.player}/>
         <button onClick={this.toggleDarkMode}>{this.state.mapIsDark ? 'Lights On' : `Lights Off`}</button>
+        <Editor mapData={this.state.mapData} setGridDimensions={this.setGridDimensions}/>
       </div>
     )
   }
