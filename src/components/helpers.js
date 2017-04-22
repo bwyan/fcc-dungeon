@@ -29,7 +29,6 @@ const helpers = {
 
 
     delete mapData.tileMap[this.getTileIndex(currentRow, currentCol)].player;
-    console.log(mapData.tileMap);
     mapData.tileMap[this.getTileIndex(newRow, newCol)].player = true; //TODO: should I refactor this so that the player position isn't stored directly on the map? Each tile would get a 'hasPlayer' prop instead (derived from player.position).
 
     this.setLitTiles(this.getTileIndex(newRow, newCol));
