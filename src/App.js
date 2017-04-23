@@ -71,7 +71,7 @@ class App extends Component {
   }
 
   initialize() {
-    let mapIsDark = true;
+    let mapIsDark = false;
     const mapData = JSON.parse(JSON.stringify(maps.m1));
     const enemies = {};
     const player = {
@@ -207,46 +207,36 @@ class App extends Component {
   }
 
   setGridDimensions(rows, columns) {
-    console.log('New Dimensions. Rows: ' + rows + ' Columns: ' + columns);
-
-    columns = columns || this.state.columns;
     let mapData = {...this.state.mapData};
     let tileMap = mapData.tileMap;
+    let existingTiles = [];
 
-    if (tileMap.length < (rows * columns)) {
-      for (var i = tileMap.length; i < rows * columns; i++) {
-        console.log('adding a new tile: ' + i);
-        tileMap.push({name: 'floor'})
-
-      }
-    } else if (tileMap.length > rows * columns) {
-      tileMap.splice(rows * columns - tileMap.length);
-    }
-
-    tileMap.forEach((tile, index, tileMap) => {
-      if(index % columns === 0 || index % columns === columns - 1) {
-        tileMap[index] = {name: 'wall'};  
-      }     
-
-      if(index < columns - 1) {
-        tileMap[index] = {name: 'wall'}; 
-      }
-
-      if(index > tileMap.length - columns) {
-        tileMap[index] = {name: 'wall'}; 
+    mapData.tileMap.forEach((tile, index, tileMap) => {
+      if (index % columns === 0 || index % columns === columns - 1 || index < columns - 1 || index > tileMap.length - columns) {
+        return;
+      } else if (tile.name !== 'floor') {
+        existingTiles.push({oldPosition: index, tile: tile});
       }
     });
 
+    console.log(existingTiles);
+    //Set all of the perimiter tiles to floor, so we don't end up with extra wall tiles on the board when the map is resized and tiles shift..
+    mapData = helpers.openBorders(mapData);
 
-    mapData.rows = rows;
-    mapData.columns = columns;
+    //Add or remove tiles from the tileMap to arrive at the correct number of tiles for the new map.
+    mapData = helpers.resizeTileMap(mapData, rows, columns);
 
+    //Set all of the perimiter tiles to wall, so the player is trapped.
+    mapData = helpers.secureBorders(mapData);
+  
     this.setState({
       rows,
       columns,
       mapData
     })
   }
+
+
 
 
   render() {
