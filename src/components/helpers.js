@@ -94,8 +94,64 @@ const helpers = {
     mapIsDark = !mapIsDark;
     this.setState({mapIsDark, mapData}); 
     // this.setLitTiles(this.getTileIndex(this.state.player.position[0], this.state.player.position[1]));
-  }
+  },
 
+
+  openBorders(mapData) {
+    let tileMap = mapData.tileMap;
+
+    tileMap.forEach((tile, index, tileMap) => {
+      if(index % mapData.columns === 0 || index % mapData.columns === mapData.columns - 1) {
+        tileMap[index] = {name: 'floor'};
+      }     
+
+      if(index < mapData.columns) {
+        tileMap[index] = {name: 'floor'};
+      }
+
+      if(index > tileMap.length - mapData.columns) {
+        tileMap[index] = {name: 'floor'}; 
+      }
+    });
+
+    return mapData;    
+  },
+
+  secureBorders(mapData) {
+    const columns = mapData.columns;
+
+    mapData.tileMap.forEach((tile, index, tileMap) => {
+      if(index % columns === 0 || index % columns === columns - 1) {
+        tileMap[index] = {name: 'wall'};  
+      }     
+
+      if(index < columns - 1) {
+        tileMap[index] = {name: 'wall'}; 
+      }
+
+      if(index > tileMap.length - columns) {
+        tileMap[index] = {name: 'wall'}; 
+      }
+    });
+
+    return mapData;
+  },
+
+  resizeTileMap(mapData, rows, columns) {
+    mapData.rows = rows;
+    mapData.columns = columns;
+    let tileMap = mapData.tileMap;
+
+    if (tileMap.length < (rows * columns)) {
+      for (var i = tileMap.length; i < rows * columns; i++) {
+        tileMap.push({name: 'floor'})
+      }
+    } else if (tileMap.length > rows * columns) {
+      tileMap.splice(rows * columns - tileMap.length);
+    }
+
+    return mapData;
+  }
 
 }
 export default helpers;
