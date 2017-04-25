@@ -1,4 +1,18 @@
 const maps = {
+  'm0': {
+    rows: 7,
+    columns: 7,
+    tileMap: [
+      {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'},
+      {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
+      {name: 'wall'}, {name: 'floor'}, {name: 'potato'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
+      {name: 'wall'}, {name: 'partyhorn'}, {name: 'goblin'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
+      {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
+      {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
+      {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}
+    ],
+    startingPosition: [1, 1]
+  },
   'm1': {
     rows: 7,
     columns: 7,
