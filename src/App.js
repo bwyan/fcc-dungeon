@@ -72,7 +72,7 @@ class App extends Component {
 
   initialize() {
     let mapIsDark = false;
-    const mapData = JSON.parse(JSON.stringify(maps.m1));
+    const mapData = JSON.parse(JSON.stringify(maps.m0));
     const enemies = {};
     const player = {
         health: 30,
@@ -208,27 +208,60 @@ class App extends Component {
 
   setGridDimensions(rows, columns) {
     let mapData = {...this.state.mapData};
-    let tileMap = mapData.tileMap;
     let existingTiles = [];
 
     mapData.tileMap.forEach((tile, index, tileMap) => {
-      if (index % columns === 0 || index % columns === columns - 1 || index < columns - 1 || index > tileMap.length - columns) {
+      if (index % mapData.columns === 0 || index % mapData.columns === mapData.columns - 1 || index < mapData.columns - 1 || index > tileMap.length - mapData.columns) {
         return;
-      } else if (tile.name !== 'floor') {
-        existingTiles.push({oldPosition: index, tile: tile});
+      } else {
+        console.log(index);
+        const difference = columns - mapData.columns;
+        console.log(difference); //difference in the number columns.
+
+        const rowsBefore = Math.floor(index / mapData.columns);
+        console.log(rowsBefore); //rows before the one the tile is in
+
+        const newIndex = index + difference * rowsBefore;
+        existingTiles.push({currentIndex: index, newIndex: newIndex, tileData: tile});
       }
     });
 
-    console.log(existingTiles);
+    console.log(existingTiles)
+
+    // existingTiles.forEach(tile => {
+    //   const difference = columns - mapData.columns;
+    //   console.log(difference); //difference in the number columns.
+
+    //   const rowsBefore = Math.floor(tile.mapIndex / mapData.columns);
+    //   console.log(rowsBefore); //rows before the one the tile is in
+
+    //   console.log(tile.mapIndex); //current index of the tile
+
+    //   tile.newMapIndex = tile.mapIndex + difference * rowsBefore;
+    //   console.log(tile);
+    // });
+
+
+
     //Set all of the perimiter tiles to floor, so we don't end up with extra wall tiles on the board when the map is resized and tiles shift..
     mapData = helpers.openBorders(mapData);
 
     //Add or remove tiles from the tileMap to arrive at the correct number of tiles for the new map.
     mapData = helpers.resizeTileMap(mapData, rows, columns);
 
+    existingTiles.forEach(tile => {
+      if (tile.newIndex > rows * columns) {return};
+
+      mapData.tileMap[tile.newIndex] = tile.tileData;
+    })
+
+    console.log(mapData.tileMap);
+
     //Set all of the perimiter tiles to wall, so the player is trapped.
     mapData = helpers.secureBorders(mapData);
   
+
+
     this.setState({
       rows,
       columns,

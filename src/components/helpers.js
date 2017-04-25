@@ -16,8 +16,9 @@ const helpers = {
     return this.state.mapData.tileMap[row * this.state.mapData.columns + col]
   },
 
-  getTileIndex(row, col) {
-    return row * this.state.mapData.columns + col;
+  getTileIndex(row, col, numberOfColumns) {
+    numberOfColumns = numberOfColumns || this.state.mapData.columns;
+    return row * numberOfColumns + col;
   },
 
   setPlayerPosition(newRow, newCol) {
