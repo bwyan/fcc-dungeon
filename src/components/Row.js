@@ -6,7 +6,13 @@ class Row extends React.Component {
 		let tiles = [];
 
 		for (var i = 0; i < this.props.columns; i++) {
-			tiles.push(<Tile key={i} rowNumber={this.props.rowNumber} colNumber={i} tileData={this.props.rowData[i]}/>)
+			tiles.push(<Tile
+										key={i}
+										rowNumber={this.props.rowNumber}
+										colNumber={i}
+										tileData={this.props.rowData[i]}
+										setTileAtPosition={this.props.setTileAtPosition}
+								/>)
 		}		
 
 		return(

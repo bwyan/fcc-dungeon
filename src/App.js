@@ -28,6 +28,7 @@ class App extends Component {
     super();
 
     this.setGridDimensions = this.setGridDimensions.bind(this);
+    this.toggleTileAtPosition = this.toggleTileAtPosition.bind(this);
 
     this.getTileIndex = helpers.getTileIndex.bind(this);
     this.getTile = helpers.getTile.bind(this);
@@ -213,10 +214,10 @@ class App extends Component {
 
     //Collect all non-border tiles from the map, and give them a new idex that will keep them at the same coordinates after the resize.
     mapData.tileMap.forEach((tile, index, tileMap) => {
-      //If the cell is on the border, don't
+      //Ignore border cells
       if (index % mapData.columns === 0 || index % mapData.columns === mapData.columns - 1 || index < mapData.columns - 1 || index > tileMap.length - mapData.columns) {
         return;
-      } else {
+      } else { //Add non-border cells to existingTiles
         //Difference in the number columns before and after the resize.
         const difference = columns - mapData.columns;
 
@@ -256,13 +257,28 @@ class App extends Component {
     })
   }
 
+  toggleTileAtPosition(tile, position) {
+    const mapData = {...this.state.mapData};
+    console.log(tile, position);
+
+    position = this.getTileIndex(position[0], position[1]);
+
+    if (mapData.tileMap[position].name === tile.name) {
+      mapData.tileMap[position].name = 'floor';
+    } else {
+      mapData.tileMap[position] = tile;      
+    }
+
+    this.setState({mapData});
+  }
+
 
 
   render() {
     return (
       <div className="App">
         <h1>Into the Dungeon…</h1>
-        <Board mapData={this.state.mapData} coverMapData={this.state.coverData}/>      
+        <Board mapData={this.state.mapData} coverMapData={this.state.coverData} setTileAtPosition={this.toggleTileAtPosition}/>      
         <HUD player={this.state.player}/>
         <button onClick={this.toggleDarkMode}>{this.state.mapIsDark ? 'Lights On' : `Lights Off`}</button>
         <Editor mapData={this.state.mapData} setGridDimensions={this.setGridDimensions}/>
