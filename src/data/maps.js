@@ -4,7 +4,7 @@ const maps = {
     columns: 7,
     tileMap: [
       {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'}, {name: 'wall'},
-      {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
+      {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'door', warp: 'm1'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
       {name: 'wall'}, {name: 'floor'}, {name: 'potato'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
       {name: 'wall'}, {name: 'partyhorn'}, {name: 'goblin'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
       {name: 'wall'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'floor'}, {name: 'wall'},
