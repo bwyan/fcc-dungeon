@@ -3,7 +3,6 @@ import playerLevels from '../data/playerLevels.js'
 const player = {
 
   changePlayerXP(amount) {
-
     let player = {...this.state.player};
     const newXP = player.xp += amount;
     const maxXP = playerLevels[player.level].maxXP;

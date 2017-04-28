@@ -5,9 +5,6 @@ class Tile extends React.Component {
 	handleClick(e) {
 		e.preventDefault();
 
-		// const row = Number(e.target.getAttribute("data-row"));
-		// const col = Number(e.target.getAttribute("data-col"));
-
 		const row = this.props.rowNumber;
 		const col = this.props.colNumber;
 		console.log(row, col);

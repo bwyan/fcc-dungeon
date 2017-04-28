@@ -29,6 +29,7 @@ class App extends Component {
 
     this.setGridDimensions = this.setGridDimensions.bind(this);
     this.toggleTileAtPosition = this.toggleTileAtPosition.bind(this);
+    this.setTileToAdd = this.setTileToAdd.bind(this);
 
     this.getTileIndex = helpers.getTileIndex.bind(this);
     this.getTile = helpers.getTile.bind(this);
@@ -272,6 +273,9 @@ class App extends Component {
     this.setState({mapData});
   }
 
+  setTileToAdd(tile) {
+    this.setState({tileToAdd: tile});
+  }
 
 
   render() {
@@ -281,7 +285,7 @@ class App extends Component {
         <Board mapData={this.state.mapData} coverMapData={this.state.coverData} setTileAtPosition={this.toggleTileAtPosition}/>      
         <HUD player={this.state.player}/>
         <button onClick={this.toggleDarkMode}>{this.state.mapIsDark ? 'Lights On' : `Lights Off`}</button>
-        <Editor mapData={this.state.mapData} setGridDimensions={this.setGridDimensions}/>
+        <Editor mapData={this.state.mapData} setGridDimensions={this.setGridDimensions} setTileToAdd={this.setTileToAdd}/>
       </div>
     )
   }
