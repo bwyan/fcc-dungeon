@@ -35,8 +35,6 @@ class App extends Component {
     this.changePlayerHealth = helpers.changePlayerHealth.bind(this);
     this.setLitTiles = helpers.setLitTiles.bind(this);
     this.toggleDarkMode = helpers.toggleDarkMode.bind(this);
-    // this.loadMap = helpers.loadMap.bind(this);
-    // this.warp = helpers.loadMap.bind(this);
 
     this.handleFight = combat.handleFight.bind(this);
     this.attackPlayer = combat.attackPlayer.bind(this);
@@ -72,6 +70,7 @@ class App extends Component {
 
   initialize() {
     let mapIsDark = false;
+    const tileToAdd = 'wall'
     const mapData = JSON.parse(JSON.stringify(maps.m0));
     const enemies = {};
     const player = {
@@ -86,6 +85,7 @@ class App extends Component {
     }
     
     this.setState({
+      tileToAdd,
       mapIsDark,
       mapData,
       enemies,
@@ -206,69 +206,55 @@ class App extends Component {
     return(next);
   }
 
+
   setGridDimensions(rows, columns) {
     let mapData = {...this.state.mapData};
     let existingTiles = [];
 
+    //Collect all non-border tiles from the map, and give them a new idex that will keep them at the same coordinates after the resize.
     mapData.tileMap.forEach((tile, index, tileMap) => {
+      //If the cell is on the border, don't
       if (index % mapData.columns === 0 || index % mapData.columns === mapData.columns - 1 || index < mapData.columns - 1 || index > tileMap.length - mapData.columns) {
         return;
       } else {
-        console.log(index);
+        //Difference in the number columns before and after the resize.
         const difference = columns - mapData.columns;
-        console.log(difference); //difference in the number columns.
 
+        //How many rows are there before the one the tile is in?
+        //We'll use this info to increase or decrease the index by the number of
+        //new cells (+ or -) that will be added to be in the array ()
         const rowsBefore = Math.floor(index / mapData.columns);
-        console.log(rowsBefore); //rows before the one the tile is in
 
+        //Add the existing index to the number of additional cells there will be
+        //in the array before we get to this tile
         const newIndex = index + difference * rowsBefore;
         existingTiles.push({currentIndex: index, newIndex: newIndex, tileData: tile});
       }
     });
 
-    console.log(existingTiles)
-
-    // existingTiles.forEach(tile => {
-    //   const difference = columns - mapData.columns;
-    //   console.log(difference); //difference in the number columns.
-
-    //   const rowsBefore = Math.floor(tile.mapIndex / mapData.columns);
-    //   console.log(rowsBefore); //rows before the one the tile is in
-
-    //   console.log(tile.mapIndex); //current index of the tile
-
-    //   tile.newMapIndex = tile.mapIndex + difference * rowsBefore;
-    //   console.log(tile);
-    // });
-
-
-
-    //Set all of the perimiter tiles to floor, so we don't end up with extra wall tiles on the board when the map is resized and tiles shift..
-    mapData = helpers.openBorders(mapData);
+    //Clear the tileMap so we don't end up with stray tiles after the resize.
+    mapData.tileMap = mapData.tileMap.map(tile => {
+      return tile = {name: 'floor'};
+    })
 
     //Add or remove tiles from the tileMap to arrive at the correct number of tiles for the new map.
     mapData = helpers.resizeTileMap(mapData, rows, columns);
 
+    //Set all of the estisting tiles back at their correct coordinates.
     existingTiles.forEach(tile => {
       if (tile.newIndex > rows * columns) {return};
-
       mapData.tileMap[tile.newIndex] = tile.tileData;
     })
 
-    console.log(mapData.tileMap);
-
-    //Set all of the perimiter tiles to wall, so the player is trapped.
+    //Set all of the perimiter tiles to wall, so the player is trapped in the dungeon.
     mapData = helpers.secureBorders(mapData);
   
-
-
     this.setState({
       rows,
       columns,
       mapData
     })
   }
-
 
 
 
